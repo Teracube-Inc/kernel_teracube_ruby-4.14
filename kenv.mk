@@ -51,9 +51,8 @@ ifneq ($(strip $(TARGET_NO_KERNEL)),true)
     TARGET_KERNEL_CLANG_COMPILE :=
     CC := $(TARGET_KERNEL_CROSS_COMPILE)gcc
     ifeq ($(strip $(TARGET_KERNEL_USE_CLANG)),true)
-      CLANG_PATH=$(KERNEL_ROOT_DIR)/prebuilts/clang/host/linux-x86/clang-r353983c
       TARGET_KERNEL_CLANG_COMPILE := CLANG_TRIPLE=aarch64-linux-gnu-
-      CC := $(CLANG_PATH)/bin/clang
+      CC := $(KERNEL_ROOT_DIR)/prebuilts/clang/host/linux-x86/clang-r383902/bin/clang
     endif
   else
     TARGET_KERNEL_CROSS_COMPILE ?= $(KERNEL_ROOT_DIR)/prebuilts/gcc/$(HOST_PREBUILT_TAG)/arm/arm-linux-androideabi-4.9/bin/arm-linux-androidkernel-
@@ -71,17 +70,6 @@ ifneq ($(strip $(TARGET_NO_KERNEL)),true)
     TARGET_KERNEL_CLANG_COMPILE += CCACHE_CPP2=yes CC='$(CCACHE_EXEC) $(CC)'
   else
     TARGET_KERNEL_CLANG_COMPILE += CC=$(CC)
-  endif
-
-  KERNEL_HOST_GCC_PREFIX := $(patsubst %strip,%,$(HOST_STRIP))
-  ifeq (yes,yes)
-  KERNEL_HOSTCC := $(KERNEL_ROOT_DIR)/$(KERNEL_HOST_GCC_PREFIX)gcc
-  KERNEL_HOSTCXX := $(KERNEL_ROOT_DIR)/$(KERNEL_HOST_GCC_PREFIX)g++
-  else
-  KERNEL_HOST_GCC_TOOLCHAIN := $(patsubst %/,%,$(dir $(patsubst %/,%,$(dir $(HOST_STRIP)))))
-  KERNEL_HOST_CLANG_FLAGS := --gcc-toolchain=$(KERNEL_ROOT_DIR)/$(KERNEL_HOST_GCC_TOOLCHAIN) --sysroot $(KERNEL_ROOT_DIR)/$(KERNEL_HOST_GCC_TOOLCHAIN)/sysroot $(patsubst -B%,-B$(KERNEL_ROOT_DIR)/%,$(filter -B%,$(SOONG_CLANG_HOST_GLOBAL_LDFLAGS))) $(patsubst -L%,-L$(KERNEL_ROOT_DIR)/%,$(filter -L%,$(SOONG_CLANG_HOST_GLOBAL_LDFLAGS)))
-  KERNEL_HOSTCC := "$(KERNEL_ROOT_DIR)/$(CLANG) $(KERNEL_HOST_CLANG_FLAGS)"
-  KERNEL_HOSTCXX := "$(KERNEL_ROOT_DIR)/$(CLANG_CXX) $(KERNEL_HOST_CLANG_FLAGS)"
   endif
 
   ifeq ($(wildcard $(TARGET_PREBUILT_KERNEL)),)
@@ -113,23 +101,16 @@ ifneq ($(strip $(TARGET_NO_KERNEL)),true)
     #KERNEL_MODULES_OUT := $(if $(filter /% ~%,$(TARGET_OUT)),,$(KERNEL_ROOT_DIR)/)$(TARGET_OUT)
     #KERNEL_MODULES_DEPS := $(if $(wildcard $(KERNEL_MODULES_OUT)/lib/modules/*.ko),$(wildcard $(KERNEL_MODULES_OUT)/lib/modules/*.ko),$(KERNEL_MODULES_OUT)/lib/modules)
     #KERNEL_MODULES_SYMBOLS_OUT := $(if $(filter /% ~%,$(TARGET_OUT_UNSTRIPPED)),,$(KERNEL_ROOT_DIR)/)$(TARGET_OUT_UNSTRIPPED)/system
-    KERNEL_MAKE_OPTION := O=$(KERNEL_ROOT_OUT) ARCH=$(KERNEL_TARGET_ARCH) CROSS_COMPILE=$(TARGET_KERNEL_CROSS_COMPILE) $(TARGET_KERNEL_CLANG_COMPILE) ROOTDIR=$(KERNEL_ROOT_DIR)
-  ifdef MTK_DTBO_FEATURE
+    KERNEL_MAKE_OPTION := O=$(KERNEL_ROOT_OUT) ARCH=$(KERNEL_TARGET_ARCH) CROSS_COMPILE=$(TARGET_KERNEL_CROSS_COMPILE) $(TARGET_KERNEL_CLANG_COMPILE) ROOTDIR=$(KERNEL_ROOT_DIR) $(if $(strip $(SHOW_COMMANDS)),V=1)
     KERNEL_MAKE_OPTION += MTK_DTBO_FEATURE=$(MTK_DTBO_FEATURE)
-  endif
-  ifdef KERNEL_HOSTCC
-    KERNEL_MAKE_OPTION += HOSTCC=$(KERNEL_HOSTCC)
-  endif
-  ifdef KERNEL_HOSTCXX
-    KERNEL_MAKE_OPTION += HOSTCXX=$(KERNEL_HOSTCXX)
-  endif
-  ifeq ($(KERNEL_TARGET_ARCH),arm64)
+    KERNEL_MAKE_OPTION += HOSTCC=/usr/bin/gcc HOSTCXX=/usr/bin/g++
+    ifeq ($(KERNEL_TARGET_ARCH),arm64)
       ifeq ($(strip $(TARGET_KERNEL_USE_CLANG)),true)
           # for CONFIG_LTO_CLANG to find clang llvm-dis & llvm-ar & LLVMgold.so
           KERNEL_MAKE_OPTION += LD_LIBRARY_PATH=$(CLANG_PATH)/lib64:$$LD_LIBRARY_PATH
           KERNEL_MAKE_OPTION += PATH=$(CLANG_PATH)/bin/:$$PATH
       endif
-  endif
+    endif
   else
     BUILT_KERNEL_TARGET := $(TARGET_PREBUILT_KERNEL)
   endif#TARGET_PREBUILT_KERNEL is empty

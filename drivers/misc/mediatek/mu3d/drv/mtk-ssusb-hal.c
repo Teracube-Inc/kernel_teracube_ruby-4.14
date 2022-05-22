@@ -325,8 +325,7 @@ bool u3_loop_back_test(void)
 #endif
 
 #ifdef CONFIG_MTK_SIB_USB_SWITCH
-#include <linux/wakelock.h>
-static struct wake_lock sib_wakelock;
+static struct wakeup_source sib_wakelock;
 bool in_sib_mode;
 
 void usb_phy_sib_enable_switch(bool enable)
@@ -347,8 +346,8 @@ void usb_phy_sib_enable_switch(bool enable)
 			mdelay(10);
 
 			usb_mtkphy_sib_enable_switch(mtk_phy, true);
-			if (!wake_lock_active(&sib_wakelock))
-				wake_lock(&sib_wakelock);
+			if (!sib_wakelock.active)
+				__pm_stay_awake(&sib_wakelock);
 			in_sib_mode = 1;
 		} else if (!enable && in_sib_mode) {
 			/*SSUSB_U3_PORT_DIS/SSUSB_U3_PORT_PDN = 0*/
@@ -365,8 +364,8 @@ void usb_phy_sib_enable_switch(bool enable)
 
 			usb_mtkphy_sib_enable_switch(mtk_phy, false);
 			phy_power_off(mtk_phy);
-			if (wake_lock_active(&sib_wakelock))
-				wake_unlock(&sib_wakelock);
+			if (sib_wakelock.active)
+				__pm_relax(&sib_wakelock);
 			in_sib_mode	= 0;
 		}
 	}

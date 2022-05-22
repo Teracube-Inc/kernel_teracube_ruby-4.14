@@ -470,6 +470,25 @@ static inline int imgsensor_check_is_alive(struct IMGSENSOR_SENSOR *psensor)
 	if (err != ERROR_NONE)
 		pr_info("ERROR: No imgsensor alive\n");
 
+/* Stoneoim:maxiaojun on: Mon, 26 Aug 2013 17:04:18 +0800
+ * board device name support.
+ */
+#ifdef VANZO_DEVICE_NAME_SUPPORT
+    {
+        extern void v_set_dev_name(int id, char *name);
+        if (ERROR_NONE == err) {
+            if (IMGSENSOR_SENSOR_IDX_MAIN == psensor_inst->sensor_idx) {
+                v_set_dev_name(3, (char *)psensor_inst->psensor_name);
+            } else if (IMGSENSOR_SENSOR_IDX_SUB == psensor_inst->sensor_idx) {
+                v_set_dev_name(5, (char *)psensor_inst->psensor_name);
+            } else if (IMGSENSOR_SENSOR_IDX_MAIN2 == psensor_inst->sensor_idx) {
+                v_set_dev_name(4, (char *)psensor_inst->psensor_name);
+            }
+        }
+    }
+#endif
+// End of Stoneoim:maxiaojun
+
 	imgsensor_hw_power(&pgimgsensor->hw,
 	    psensor,
 	    psensor_inst->psensor_name,
@@ -1160,6 +1179,20 @@ static inline int adopt_CAMERA_HW_GetInfo2(void *pBuf)
 		"\nHDR_Support(0:NO HDR,1: iHDR,2:mvHDR,3:zHDR)=%2d",
 		pSensorInfo->HDR_Support);
 
+#ifdef VANZO_DEVICE_NAME_SUPPORT
+        {
+          extern void v_set_dev_name(int id, char *name);
+            if(pSensorGetInfo->SensorId==0){
+              v_set_dev_name(3, psensor->inst.psensor_name);
+            }
+            else if(pSensorGetInfo->SensorId==1){
+              v_set_dev_name(5, psensor->inst.psensor_name);
+            }
+            else if(pSensorGetInfo->SensorId==2){
+              v_set_dev_name(4, psensor->inst.psensor_name);
+            }
+        }
+#endif
 	/* Resolution */
 	if (copy_to_user(
 	    (void __user *) (pSensorGetInfo->pSensorResolution),
@@ -2732,6 +2765,28 @@ static struct platform_driver gimgsensor_platform_driver = {
 /*
  * imgsensor_init()
  */
+#if  defined(VANZO_FEATURE_FAKE_DUAL_CAMERA_BY_NAME)
+static ssize_t show_BV_value(struct device_driver *ddri, char *buf)
+{
+    MUINT32 sensorID = 0;
+
+    MUINT32 retLen = 0;
+    struct IMGSENSOR_SENSOR      *psensor = imgsensor_sensor_get_inst(IMGSENSOR_SENSOR_IDX_MAP(DUAL_CAMERA_MAIN_SENSOR));
+    imgsensor_sensor_feature_control(psensor, SENSOR_FEATURE_GET_YUV_SENSOR_BV, (MUINT8 *)&sensorID, &retLen);
+  return snprintf(buf, PAGE_SIZE, "%d\n", sensorID);
+}
+
+static ssize_t store_BV_value(struct device_driver *ddri, const char *buf, size_t count)
+{
+  return 0;
+}
+
+static DRIVER_ATTR(bv_val,   S_IWUSR | S_IRUGO, show_BV_value, store_BV_value);
+
+static struct driver_attribute *cam_bv_val[] = {
+  &driver_attr_bv_val,   
+};
+#endif
 static int __init imgsensor_init(void)
 {
 	pr_info("[camerahw_probe] start\n");
@@ -2744,6 +2799,11 @@ static int __init imgsensor_init(void)
 	/*prevent imgsensor race condition in vulunerbility test*/
 	mutex_init(&imgsensor_mutex);
 
+#if  defined(VANZO_FEATURE_FAKE_DUAL_CAMERA_BY_NAME)
+    if(driver_create_file(&gimgsensor_platform_driver.driver, cam_bv_val[0])){
+		PK_PR_ERR("create bv_val failed!!\n");
+    }
+#endif
 #ifdef CONFIG_CAM_TEMPERATURE_WORKQUEUE
 	memset((void *)&cam_temperature_wq, 0, sizeof(cam_temperature_wq));
 	INIT_DELAYED_WORK(

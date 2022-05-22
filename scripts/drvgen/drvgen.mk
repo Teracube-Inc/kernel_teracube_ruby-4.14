@@ -24,6 +24,8 @@ else
 PROJ_DT_NAMES := $(subst $\",,$(CONFIG_BUILD_ARM_DTB_OVERLAY_IMAGE_NAMES))
 endif
 
+PROJ_DT_NAMES := mediatek/ruby
+
 MAIN_DTB_NAMES := $(addsuffix .dtb,$(MAIN_DT_NAMES))
 PROJ_DTB_NAMES := $(addsuffix .dtb,$(PROJ_DT_NAMES))
 MAIN_DTB_FILES := $(addprefix $(objtree)/arch/$(SRCARCH)/boot/dts/, $(MAIN_DTB_NAMES))

@@ -2957,12 +2957,12 @@ static void cmdq_core_dump_dbg(const char *tag)
 {
 	u32 dbg0[3], dbg2[6], i;
 
-	if (atomic_cmpxchg(&cmdq_sec_dbg_ctrl, 0, 1) == 0) {
-		struct arm_smccc_res res;
+//	if (atomic_cmpxchg(&cmdq_sec_dbg_ctrl, 0, 1) == 0) {
+//		struct arm_smccc_res res;
 
-		arm_smccc_smc(MTK_SIP_CMDQ_CONTROL, CMDQ_ENABLE_DEBUG,
-			0, 0, 0, 0, 0, 0, &res);
-	}
+//		arm_smccc_smc(MTK_SIP_CMDQ_CONTROL, CMDQ_ENABLE_DEBUG,
+//			0, 0, 0, 0, 0, 0, &res);
+//	}
 
 	/* debug select */
 	for (i = 0; i < 6; i++) {

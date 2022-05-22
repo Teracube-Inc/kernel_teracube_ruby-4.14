@@ -299,6 +299,8 @@ extern struct LCM_DRIVER nt51021_wuxga_dsi_vdo_mt8173_lcm_drv;
 extern struct LCM_DRIVER ili9881c_hdp_dsi_vdo_ilitek_rt5081_lcm_drv_ebbg;
 extern struct LCM_DRIVER hx8394f_hd720_dsi_vdo_tianma_lcm_drv;
 extern struct LCM_DRIVER jd9365_hd720_dsi_lcm_drv;
+extern struct LCM_DRIVER tc3315_auo623_truly_fhdplusplus_lcm_drv;
+extern struct LCM_DRIVER hx83112a_auo623_truly_fhdplusplus_lcm_drv;
 extern struct LCM_DRIVER nt36672_fhdp_dsi_vdo_auo_lcm_drv;
 extern struct LCM_DRIVER nt36672_fhdp_dsi_vdo_auo_laneswap_lcm_drv;
 extern struct LCM_DRIVER nt35521_hd_dsi_vdo_truly_nt50358_lcm_drv;

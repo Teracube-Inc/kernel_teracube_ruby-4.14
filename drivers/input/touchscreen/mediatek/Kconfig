@@ -53,6 +53,20 @@ config TOUCHSCREEN_MTK_FOCALTECH_TS
 	  To compile this dirver as a module, choose M here: the
 	  module will be called.
 
+source "drivers/input/touchscreen/mediatek/focaltech_touch/Kconfig"
+
+config TOUCHSCREEN_HIMAX_CHIPSET
+	bool "hxchipset for Mediatek package"
+	default n
+	help
+	  Say Y here if you have hxchipset touch panel.
+
+	  If unsure, say N.
+
+	  To compile this dirver as a module, choose M here: the
+	  module will be called.
+
+source "drivers/input/touchscreen/mediatek/hxchipset/Kconfig"
 
 config TOUCHSCREEN_MTK_GT1151
 	bool "GT1151 for Mediatek package"
@@ -154,5 +168,144 @@ config TOUCHSCREEN_MTK_FOCALTECH_FHD
 	help
 	  Say Y here if you have Focaltech touch panel.
 	  If unsure, say N.
+
+config TOUCHSCREEN_MTK_GSL1691
+	bool "GSL1691 for Mediatek package"
+	default n
+	help
+	  Say Y here if you have GSL1691 touch panel.
+
+	  If unsure, say N.
+
+config TOUCHSCREEN_MTK_FT8006U
+	bool "FT8006U for Mediatek package"
+	default n
+	help
+	  Say Y here if you have FT8006U touch panel.
+
+	  If unsure, say N.
+
+source "drivers/input/touchscreen/mediatek/FT8006U/Kconfig"
+
+config TOUCHSCREEN_MTK_FT8719
+	bool "FT8719 for Mediatek package"
+	default n
+	help
+	  Say Y here if you have FT8719 touch panel.
+
+	  If unsure, say N.
+
+config TOUCHSCREEN_MTK_GT1XX
+	bool "GT1XX for Mediatek package"
+	default n
+	help
+	  Say Y here if you have GT1XX touch panel.
+
+	  If unsure, say N.
+
+source "drivers/input/touchscreen/mediatek/GT1XX/Kconfig"
+
+config TOUCHSCREEN_CHIPONE
+	tristate "Chipone TDDI touchscreen for Mediatek package"
+	depends on I2C
+	default n
+	help
+	  Say y here if you have chipone TDDI touch panel.
+		
+	  If unsure, say N.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called chipone-tddi.
+
+config TOUCHSCREEN_MTK_FOCALTECH_MULTITYPE
+	bool "focaltech multiType for Mediatek package"
+	default n
+	help
+	  Say Y here if you have focaltech multiType touch panel.
+
+	  If unsure, say N.
+
+source "drivers/input/touchscreen/mediatek/focaltech_multiType/Kconfig"
+
+config TOUCHSCREEN_MTK_FOCALTECH_TS
+    bool "Focaltech Ts for Mediatek"
+    default n
+    help
+      Say Y here if you have Focaltech touch panel.
+      If unsure, say N.
+
+source "drivers/input/touchscreen/mediatek/focaltech_touch/Kconfig"
+
+config TOUCHSCREEN_MTK_FT8719_I2C
+	bool "ft8719_i2c for Mediatek package"
+	default n
+	help
+	  Say Y here if you have focaltech multiType touch panel.
+
+	  If unsure, say N.
+
+source "drivers/input/touchscreen/mediatek/ft8719_i2c/Kconfig"
+
+config TOUCHSCREEN_HIMAX_HX83112
+	bool "HX83112 for Mediatek package"
+	default n
+	help
+	  Say Y here if you have HX83112 touch panel.
+
+	  If unsure, say N.
+
+	  To compile this dirver as a module, choose M here: the
+	  module will be called.
+
+source "drivers/input/touchscreen/mediatek/hx83112/Kconfig"
+
+config TOUCHSCREEN_MTK_ILITEK
+	bool "ILITEK for Mediatek package"
+	default n
+	help
+	  Say Y here if you have ILITEK touch panel.
+
+	  If unsure, say N.
+
+	  To compile this dirver as a module, choose M here: the
+	  module will be called.
+
+config TOUCHSCREEN_MTK_MSG22XX
+	bool "MSG22XX for Mediatek package"
+	default n
+	help
+	  Say Y here if you have MSG22XX touch panel.
+
+	  If unsure, say N.
+
+	  To compile this dirver as a module, choose M here: the
+	  module will be called.
+
+config TOUCHSCREEN_MTK_PARADE
+	bool "PARADE for Mediatek package"
+	default n
+	help
+	  Say Y here if you have PARADE touch panel.
+
+	  If unsure, say N.
+
+	  To compile this dirver as a module, choose M here: the
+	  module will be called.
+
+config CUSTOM_KERNEL_TOUCHPANEL
+	string "CUSTOM_KERNEL_TOUCHPANEL"
+	help
+	  To choose kernel TOUCHPANEL driver name
+
+config VANZO_TOUCHPANEL_GESTURES_SUPPORT
+	bool "VANZO_TOUCHPANEL_GESTURES_SUPPORT"
+	default n
+	help
+	  This option is used to enable 'SmwartWake' kernel support
+
+config VANZO_FTS_CHIP_TYPE_FT6336U
+	string "VANZO_FTS_CHIP_TYPE_FT6336U"
+	help
+	  To choose kernel if FT6336U chip variant is in use
 
 endif

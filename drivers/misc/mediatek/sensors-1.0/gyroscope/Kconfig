@@ -1,13 +1,19 @@
 
-config CUSTOM_KERNEL_GYROSCOPE
-	bool "CUSTOM KERNEL GYROSCOPE Config"
+config CUST_KERNEL_GYROSCOPE
+	bool "CUST KERNEL GYROSCOPE Config"
 	help
 	  gyroscope sensor to detect gyroscope from x y z axis.
 	  If the platform is supported for gyroscope, this
 	  configuration should be configured, and the gyroscope
 	  driver configuration should be configured as well.
 
+config CUSTOM_KERNEL_GYROSCOPE_NAME
+	string "CUSTOM_KERNEL_GYROSCOPE_NAME"
+	help
+	  Name of GYROSCOPE sensor driver to be used
+
 source "drivers/misc/mediatek/sensors-1.0/gyroscope/gyrohub/Kconfig"
 source "drivers/misc/mediatek/sensors-1.0/gyroscope/bmi160gy-i2c/Kconfig"
+source "drivers/misc/mediatek/sensors-1.0/gyroscope/icm206xx_g/Kconfig"
 source "drivers/misc/mediatek/sensors-1.0/gyroscope/ITG1010/Kconfig"
 source "drivers/misc/mediatek/sensors-1.0/gyroscope/mpu6050gy/Kconfig"

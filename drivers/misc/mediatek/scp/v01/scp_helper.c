@@ -1122,6 +1122,7 @@ static int scp_reserve_memory_ioremap(void)
 			(uint64_t)scp_reserve_mblock[id].size);
 #endif  // DEBUG
 	}
+	pr_info("[SCP] acc_sz:0x%llx, scp_sz:0x%llx\n", accumlate_memory_size, scp_mem_size);
 	BUG_ON(accumlate_memory_size > scp_mem_size);
 
 #ifdef DEBUG

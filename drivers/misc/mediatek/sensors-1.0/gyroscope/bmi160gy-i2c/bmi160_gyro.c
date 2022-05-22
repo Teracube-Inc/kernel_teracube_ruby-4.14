@@ -1545,11 +1545,13 @@ static int bmg_factory_enable_sensor(bool enabledisable,
 		pr_err_ratelimited("%s en failed!\n", __func__);
 		return -1;
 	}
+			mdelay(55);	/* 55ms */
 	err = bmi160_gyro_batch(0, sample_periods_ms * 1000000, 0);
 	if (err) {
 		pr_err_ratelimited("%s set batch failed!\n", __func__);
 		return -1;
 	}
+			mdelay(55);	/* 55ms */
 	return 0;
 }
 static int bmg_factory_get_data(int32_t data[3], int *status)
@@ -1560,7 +1562,7 @@ static int bmg_factory_get_data(int32_t data[3], int *status)
 		unsigned long endt = atomic_read(&obj->gyro_deb_end);
 
 		if (time_before_eq(jiffies, endt))
-			mdelay(55); /* 55ms */
+			mdelay(550);	/* 55ms */
 	}
 
 	return bmi160_gyro_get_data(&data[0], &data[1], &data[2], status);

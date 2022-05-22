@@ -99,7 +99,7 @@ static ssize_t atf_log_write(struct file *file,
 {
 	unsigned long ret = -1;
 	unsigned long param = -1;
-	struct arm_smccc_res res;
+//	struct arm_smccc_res res;
 
 	if (count < 12) {
 	/* for coverity check */
@@ -114,8 +114,8 @@ static ssize_t atf_log_write(struct file *file,
 #endif
 
 	if (!ret) {
-		arm_smccc_smc(MTK_SIP_KERNEL_ATF_DEBUG,
-			param, 0, 0, 0, 0, 0, 0, &res);
+//		arm_smccc_smc(MTK_SIP_KERNEL_ATF_DEBUG,
+//			param, 0, 0, 0, 0, 0, 0, &res);
 	} else {
 		wake_up_interruptible(&atf_log_wq);
 	}

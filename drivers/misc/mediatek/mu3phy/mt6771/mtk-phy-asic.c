@@ -531,15 +531,14 @@ bool u3_loop_back_test(void)
 #endif
 
 #ifdef CONFIG_MTK_SIB_USB_SWITCH
-#include <linux/wakelock.h>
-static struct wake_lock sib_wakelock;
+static struct wakeup_source sib_wakelock;
 void usb_phy_sib_enable_switch(bool enable)
 {
 	static int inited;
 
 	if (!inited) {
 		os_printk(K_INFO, "%s wake_lock_init\n", __func__);
-		wake_lock_init(&sib_wakelock, WAKE_LOCK_SUSPEND, "SIB.lock");
+		wakeup_source_init(&sib_wakelock, "SIB.lock");
 		inited = 1;
 	}
 
@@ -569,13 +568,13 @@ void usb_phy_sib_enable_switch(bool enable)
 	if (enable) {
 		U3PhyWriteReg32((phys_addr_t) (uintptr_t) SSUSB_SIFSLV_CHIP_BASE, 0x62910008);
 		sib_mode = true;
-		if (!wake_lock_active(&sib_wakelock))
-			wake_lock(&sib_wakelock);
+		if (!sib_wakelock.active)
+			__pm_stay_awake(&sib_wakelock);
 	} else {
 		U3PhyWriteReg32((phys_addr_t) (uintptr_t) SSUSB_SIFSLV_CHIP_BASE, 0x62910002);
 		sib_mode = false;
-		if (wake_lock_active(&sib_wakelock))
-			wake_unlock(&sib_wakelock);
+		if (sib_wakelock.active)
+			__pm_relax(&sib_wakelock);
 	}
 }
 

@@ -1145,6 +1145,12 @@ struct LCM_DRIVER *lcm_driver_list[] = {
 #if defined(JD9365_HD720_DSI)
 	&jd9365_hd720_dsi_lcm_drv,
 #endif
+#if defined(TC3315_AUO623_TRULY_FHDPLUSPLUS)
+	&tc3315_auo623_truly_fhdplusplus_lcm_drv,
+#endif
+#if defined(HX83112A_AUO623_TRULY_FHDPLUSPLUS)
+	&hx83112a_auo623_truly_fhdplusplus_lcm_drv,
+#endif
 #if defined(NT36672_FHDP_DSI_VDO_AUO)
 	&nt36672_fhdp_dsi_vdo_auo_lcm_drv,
 #endif

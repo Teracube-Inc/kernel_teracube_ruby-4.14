@@ -184,3 +184,16 @@ obj-$(CONFIG_FSI)		+= fsi/
 obj-$(CONFIG_TEE)		+= tee/
 obj-$(CONFIG_MULTIPLEXER)	+= mux/
 obj-$(CONFIG_TRUSTY)	+= trusty/
+
+ifeq ($(CONFIG_VANZO_DEVICE_NAME_SUPPORT),yes)
+subdir-ccflags-y += -DVANZO_DEVICE_NAME_SUPPORT
+endif
+ifeq ($(CONFIG_VANZO_FP_NAME_SUPPORT),yes)
+subdir-ccflags-y += -DVANZO_FP_NAME_SUPPORT
+endif
+ifeq ($(CONFIG_VANZO_DUAL_CAM_NAME_SUPPORT),yes)
+subdir-ccflags-y += -DVANZO_DUAL_CAM_NAME_SUPPORT
+endif
+ifeq ($(CONFIG_VANZO_FEATURE_FAKE_DUAL_CAMERA_BY_NAME),yes)
+subdir-ccflags-y += -DVANZO_FEATURE_FAKE_DUAL_CAMERA_BY_NAME
+endif

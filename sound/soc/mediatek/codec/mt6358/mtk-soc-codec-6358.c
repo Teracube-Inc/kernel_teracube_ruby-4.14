@@ -84,6 +84,11 @@
 #include<mtk_auxadc.h>
 #endif
 
+#ifdef CONFIG_SND_SOC_AW87329
+extern unsigned char aw87329_audio_kspk(void);
+extern unsigned char aw87329_audio_drcv(void);
+extern unsigned char aw87329_audio_off(void);
+#endif
 
 #define ANALOG_HPTRIM
 
@@ -4223,12 +4228,20 @@ static void Ext_Speaker_Amp_Change(bool enable)
 	if (enable) {
 		pr_debug("%s() ON+\n", __func__);
 
+#ifdef CONFIG_SND_SOC_AW87329
+		aw87329_audio_off();
+#else
 		AudDrv_GPIO_EXTAMP_Select(false, 3);
+#endif
 
 		/*udelay(1000); */
 		usleep_range(1 * 1000, 20 * 1000);
 
+#ifdef CONFIG_SND_SOC_AW87329
+		aw87329_audio_kspk();
+#else
 		AudDrv_GPIO_EXTAMP_Select(true, 3);
+#endif
 
 		msleep(SPK_WARM_UP_TIME);
 
@@ -4236,7 +4249,11 @@ static void Ext_Speaker_Amp_Change(bool enable)
 	} else {
 		pr_debug("%s(), OFF+\n", __func__);
 
+#ifdef CONFIG_SND_SOC_AW87329
+		aw87329_audio_off();
+#else
 		AudDrv_GPIO_EXTAMP_Select(false, 3);
+#endif
 
 		udelay(500);
 
@@ -7091,7 +7108,7 @@ static int Audio_Vow_Digital_Func_Switch_Set(struct snd_kcontrol *kcontrol,
 }
 
 
-static int VOW_MIC_TYPE_Select_Get(struct snd_kcontrol *kcontrol,
+static int Audio_Vow_MIC_Type_Select_Get(struct snd_kcontrol *kcontrol,
 		struct snd_ctl_elem_value *ucontrol)
 {
 	pr_debug("%s()  = %d\n", __func__, mAudio_VOW_Mic_type);
@@ -7099,7 +7116,7 @@ static int VOW_MIC_TYPE_Select_Get(struct snd_kcontrol *kcontrol,
 	return 0;
 }
 
-static int VOW_MIC_TYPE_Select_Set(struct snd_kcontrol *kcontrol,
+static int Audio_Vow_MIC_Type_Select_Set(struct snd_kcontrol *kcontrol,
 		struct snd_ctl_elem_value *ucontrol)
 {
 	if (ucontrol->value.enumerated.item[0] >
@@ -7563,9 +7580,9 @@ static const struct snd_kcontrol_new mt6358_UL_Codec_controls[] = {
 	SOC_ENUM_EXT("Audio_Vow_Digital_Func_Switch", Audio_UL_Enum[25],
 		     Audio_Vow_Digital_Func_Switch_Get,
 		     Audio_Vow_Digital_Func_Switch_Set),
-	SOC_ENUM_EXT("VOW_MIC_TYPE_Select", Audio_UL_Enum[26],
-		     VOW_MIC_TYPE_Select_Get,
-		     VOW_MIC_TYPE_Select_Set),
+	SOC_ENUM_EXT("Audio_Vow_MIC_Type_Select", Audio_UL_Enum[26],
+		     Audio_Vow_MIC_Type_Select_Get,
+		     Audio_Vow_MIC_Type_Select_Set),
 	SOC_SINGLE_EXT("Audio VOWCFG0 Data", SND_SOC_NOPM, 0, 0x80000, 0,
 		       Audio_Vow_Cfg0_Get,
 		       Audio_Vow_Cfg0_Set),
